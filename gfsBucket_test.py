@@ -8,11 +8,13 @@ uri = "mongodb://localhost:27017/"
 client = MongoClient(uri)
 db = client['test']
 fs = GridFSBucket(db)
-filename = "uploadtest.jpg"
+filename = "uploadtest.jpg" #開啟檔案的名稱
+
+
 def loadfile(fname):    
-    try:
-        file = open(fname,'rb')
-        file_binary = file.read()
+    try:        
+        file = open(fname,'rb') #開啟fname        
+        file_binary = file.read() #載入binary
         file.close()
         return file_binary
     except:
@@ -21,15 +23,28 @@ def loadfile(fname):
     
 
 def upload_file(fname,file_binary):
+    #上傳
     grid_in = fs.open_upload_stream(fname,
                                     chunk_size_bytes=4,
-                                    metadata = {"contentType": "text/plain"})
-    grid_in.write(file_binary) 
+                                    metadata = {"contentType": "text/plain"})    
+    grid_in.write(file_binary)  #寫入binary
     grid_in.close() # uploaded on close
+    print('upload done')
+
+def upload_file_1(fname,file_binary):
+    #上傳並寫入binary
+    try:
+        fs.upload_from_stream(fname,
+                              file_binary,
+                              chunk_size_bytes=4,
+                              metadata = {"contentType": "text/plain"}) 
+    except:
+        print('err')    
+
     print('upload done')
     
 def find(fname):
-    i = 1
+    i = 1 #計數器
     for grid_data in fs.find({"filename": fname},
                              no_cursor_timeout = True):
         filename = str(grid_data.filename)
@@ -41,20 +56,19 @@ def find(fname):
         i+=1
         
 def download(fname):
-    i = 1
+    i = 1 #計數器
     for grid_out in fs.find({"filename": fname},
                       no_cursor_timeout = True):
-        #grid_out = fs.open_download_stream_by_name(fname)
         contents_binary = grid_out.read()
         gname = grid_out.filename
         try:
-            """開啟檔案，確認存在"""
+            #開啟檔案，確認存在
             file = open(gname,'r')
         except:
-            """直接創新檔"""
+            #直接創新檔
             file = open(gname,'wb')
         else:
-            """已存在，另創新檔"""
+            #已存在，另創新檔
             file.close()
             print("file already exist,so creat new file name:" + str(i) + "_" + gname)
             file = open(str(i) + "_" + gname,'wb')
@@ -72,6 +86,6 @@ def delete(fname):
 
 file_data = loadfile(filename)
 if not file_data == 0b0:
-    upload_file(filename, file_data)
+    upload_file_1(filename, file_data)
     find(filename)
     download(filename)
