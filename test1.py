@@ -8,10 +8,10 @@ from gridfs import GridFS
 沒問題，但等後面處理完
 app = Flask(__name__)
 @app.route('/')
-"""
+
 def root():    
 	return "Hello World!!"
-
+"""
 #uri = "mongodb://BB1:a12151456@172.25.3.41/?authSource=test"
 uri = "mongodb://localhost:27017/" #個人測試用
 
