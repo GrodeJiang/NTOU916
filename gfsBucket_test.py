@@ -88,4 +88,4 @@ file_data = loadfile(filename)
 if not file_data == 0b0:
     upload_file_1(filename, file_data)
     find(filename)
-    #download(filename)
+    download(filename)
