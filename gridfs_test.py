@@ -1,10 +1,14 @@
 # coding=utf-8
+"""
+Gridfs功能測試
+"""
+
 from flask import Flask
 from pymongo import MongoClient
 from gridfs import GridFSBucket
 from gridfs import GridFS
 
-uri = "mongodb://localhost:27017/"
+uri = "mongodb://localhost:27017/" #個人測試用
 client = MongoClient(uri)
 db = client['test']
 gfs = GridFS(db , collection='gfs')

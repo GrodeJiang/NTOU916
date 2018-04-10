@@ -1,11 +1,16 @@
 # coding=utf-8
+"""
+從Mongo資料庫取圖片binary後
+轉回圖片並傳至綱頁
+"""
+
 from flask import Flask
 from pymongo import MongoClient
 from gridfs import GridFSBucket
 from flask import send_file
 import io
 
-uri = "mongodb://localhost:27017/"
+uri = "mongodb://localhost:27017/"#個人測試用
 client = MongoClient(uri)
 db = client['test']
 fs = GridFSBucket(db)

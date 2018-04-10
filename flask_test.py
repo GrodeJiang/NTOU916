@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""
+開啟圖片並讀取binary後
+轉回圖片並傳至綱頁
+"""
+
 from flask import Flask
 from flask import send_file
 import io
