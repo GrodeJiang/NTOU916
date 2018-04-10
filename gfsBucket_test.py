@@ -12,7 +12,7 @@ uri = "mongodb://localhost:27017/" #個人測試用
 client = MongoClient(uri)
 db = client['test']
 fs = GridFSBucket(db)
-filename = "uploadtest.jpg" #開啟檔案的名稱
+filename = "image1.jpg" #開啟檔案的名稱
 
 
 def loadfile(fname):    

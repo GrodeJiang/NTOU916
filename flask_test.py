@@ -20,12 +20,17 @@ def loadfile(fname):
         #print('file not found')
         return 0b0
     
-image_data = loadfile(filename)
+
 
 app = Flask(__name__)
 
 @app.route("/")
-def image():
+def home():
+    return "在位址後加入\"/檔名\""
+
+@app.route("/<string:name>")
+def image(name):
+    image_data = loadfile(name)
     #將圖片BINARY轉成圖片後回傳
     if not image_data == 0b0:
         return send_file(io.BytesIO(image_data),
