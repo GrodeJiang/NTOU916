@@ -6,3 +6,10 @@ flaskMongo_test.py flask從Mongo取檔案測試(4/11)
 gridfs_test.py GridFS功能測試(04/09)  
 gfsBucket_test.py GridFSBucket功能測試(04/10)  
 webtest.py 把flaskMongo_test.py功能以HTML模板完成(04/19)  
+  
+Require:  
+flask
+MongoDB
+flask-bootstrap
+flask-wtf
+Jinja2
