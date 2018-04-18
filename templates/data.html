@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Test Data{% endblock %}
+
+{% block content -%}
+    <div class="container">
+    {% block page_content %}    
+        {{ wtf.quick_form(form) }}
+        <p><br></p>
+        {% for filedata in  data  %}
+            <p>{% if data %}{{ filedata|safe }}{% else %}No file{% endif%}</p>
+        {% endfor %}
+    {% endblock %}
+    </div>
+{%- endblock content %}
