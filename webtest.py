@@ -38,6 +38,11 @@ fs = GridFSBucket(db)
 
 icon = loadfile('icon.png')
 
+Ctest = []
+Ctest.append(loadfile('t1.jpg'))
+Ctest.append(loadfile('t2.jpg'))
+Ctest.append(loadfile('t3.jpg'))
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
 bootstrap = Bootstrap(app)
@@ -75,6 +80,12 @@ def image():
                            form = form1,
                            icon = icon,
                            image = image)
+
+@app.route('/carousel', methods=['GET', 'POST'])
+def carousel():
+     return render_template('carousel.html',
+                           icon = icon,
+                           image = Ctest)
     
 @app.route('/data', methods=['GET', 'POST'])
 def data():

@@ -8,8 +8,8 @@ gfsBucket_test.py GridFSBucket功能測試(04/10)
 webtest.py 把flaskMongo_test.py功能以HTML模板完成(04/19)  
   
 Require:  
-flask
-MongoDB
-flask-bootstrap
-flask-wtf
-Jinja2
+flask  
+MongoDB  
+flask-bootstrap  
+flask-wtf  
+Jinja2  
