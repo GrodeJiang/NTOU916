@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Test Image{% endblock %}
+
+{% block page_content %}
+    {{ wtf.quick_form(form) }}
+    <!--
+    <div class="page-header">
+        <p><br></p>
+        {% if image %}
+        {% for filedata in  image  %}
+            <img src="data:image/png;base64,{{ filedata }}"/>
+        {% endfor %}
+        {% else %}
+            <p>No file<p>
+        {% endif%}
+        
+    	
+    </div>-->
+{% endblock %}

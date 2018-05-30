@@ -11,7 +11,7 @@ class Database():
             self.db = self.client[username]
     '''
     目前格式
-    example = {'name':  'example',
+    example = {'name':  'kinds_itemname_filename',
                'image': 'imageid',
                'list': {'data1': 'id1',
                         'data2': 'id2',
@@ -68,12 +68,9 @@ class Database():
             print('err')
             return None
     #找到指定欄位，並修改
-    #(database，尋找的關鍵字，尋找的值，修改關鍵字，修改後的值)
-    def Modify(self, key, value, modify_key, modify_value):
-        for doc in self.db.doc.find({key: value}):
-            doc_id = doc['_id']
-            doc[modify_key] = modify_value
-            self.db.dbtest.replace_one({'_id': doc_id}, doc)
+    #(database，尋找的關鍵字，尋找的值，修改後dist)
+    def Modify(self, key, value, doc):
+        self.db.dbtest.replace_one({key: value}, doc)
         
 '''
 testuser = Database('test')

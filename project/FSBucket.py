@@ -17,13 +17,13 @@ class FSBucket():
         self.uri = "mongodb://localhost:27017/"
         self.client = MongoClient(self.uri)
         self.db = self.client[username]
-        self.fs = GridFSBucket(self.db,'image')
+        self.fs = GridFSBucket(self.db)
         
-    def Upload(self, fname):        
-        with open(fname,'rb') as file:
+    def Upload(self, path, fname):        
+        with open(path,'rb') as file:
             file_data = file.read()
             try:
-                fileid = self.fs.upload_from_stream(self.username+'_'+fname,
+                fileid = self.fs.upload_from_stream(fname,
                                                     file_data,
                                                     chunk_size_bytes=4,
                                                     metadata = {"contentType": "image"})
