@@ -11,19 +11,19 @@ class Filedata():
         self.fileid = str(fileid)
         self.fileuploadtime = str(fileuploadtime)
 
-class FSBucket(Filedata):
+class FSBucket():
     def __init__(self, username):
         self.username = username
         self.uri = "mongodb://localhost:27017/"
         self.client = MongoClient(self.uri)
         self.db = self.client[username]
-        self.fs = GridFSBucket(self.db,'image')
+        self.fs = GridFSBucket(self.db, 'image')
         
-    def Upload(self, fname):        
-        with open(fname,'rb') as file:
+    def Upload(self, path, fname):        
+        with open(path,'rb') as file:
             file_data = file.read()
             try:
-                fileid = self.fs.upload_from_stream(self.username+'_'+fname,
+                fileid = self.fs.upload_from_stream(fname,
                                                     file_data,
                                                     chunk_size_bytes=4,
                                                     metadata = {"contentType": "image"})
@@ -50,11 +50,9 @@ class FSBucket(Filedata):
         return None
     
     def Findbyid(self, fileid):
-        grid_data = self.fs.find({"_id": fileid},
-                                 no_cursor_timeout = True)
-        file = super(FSBucket, self).__init__(None, grid_data.filename, grid_data._id,
-                                                grid_data.upload_date)
-        return file
+        for grid_data in self.fs.find({"_id": fileid},
+                                      no_cursor_timeout = True):
+            return grid_data.read()
     
     def Downloadbyname(self, fname):
         i = 1

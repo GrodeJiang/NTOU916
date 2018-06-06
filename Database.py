@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pymongo import MongoClient
+from bson import ObjectId
 
 class Database():
     
@@ -10,7 +11,7 @@ class Database():
             self.db = self.client[username]
     '''
     目前格式
-    example = {'name':  'example',
+    example = {'name':  'kinds_itemname_filename',
                'image': 'imageid',
                'list': {'data1': 'id1',
                         'data2': 'id2',
@@ -26,50 +27,61 @@ class Database():
         print ('upload done')
         return result.inserted_id
     
-    #info = {info1, info2, ...}
     #data = {data1, data2, ...}
-    ##list = {info1: data1, info2: data2, ...}
-    def Makelist(*infodata):
-        infodata = infodata
-        datalist = {}
-        for i in range(0,len(infodata[1])):
-            datalist[infodata[1][i]] = infodata[2][i]
+    #id = {id1, id2, ...}
+    ##list = {data1: id1, data2: id2, ...}
+    def Makelist(*data_id):
+        data_id = data_id
+        listdata = {}
+        for i in range(0,len(data_id[1])):
+            listdata[data_id[1][i]] = data_id[2][i]
         else:
-            return datalist
-        print('err')
-        return None    
+            return listdata
+        print('Makelist fail')
+        return None
+    
+    def Getdoc(self, key, value):
+        try:
+            for doc in self.db.doc.find({key: value}):
+                return doc
+        except:
+            print('Getdoc fail')
+            return None
     
     #拿資料 有target就回傳target的資料
     #否則回傳value資料
-    #(database，尋找的關鍵字，尋找的值，表單目標[可略過])
-    def Getdata(self, key, value, list_target=None):
-        for doc in self.db.dbtest.find({key: value}):
-            try:
-                if list_target is not None:            
-                    return (doc['list'])[list_target]
-                else:
-                    return doc[key]
-            except:
-                    print('err')
-                    return None
+    #(database，尋找的關鍵字，尋找的值, 目標資料)
+    def Getdata(self, key, value, key_to_get_data):    
+        try:
+            for doc in self.db.doc.find({key: value}):
+                return doc[key_to_get_data]
+        except:
+            print('Getdata fail')
+            return None
+    
+    def Getlistdata(self, key, value,list_target):    
+        try:
+            for doc in self.db.doc.find({key: value}):
+                    if list_target is not None:            
+                        return (doc['list'])[list_target]
+        except:
+            print('Getlistdata')
+            return None
     #找到指定欄位，並修改
-    #(database，尋找的關鍵字，尋找的值，修改關鍵字，修改後的值)
-    def Modify(self, key, value, modify_key, modify_value):
-        for doc in self.db.dbtest.find({key: value}):
-            doc_id = doc['_id']
-            doc[modify_key] = modify_value
-            self.db.dbtest.replace_one({'_id': doc_id}, doc)
+    #(database，尋找的關鍵字，尋找的值，修改後dist)
+    def Modify(self, key, value, doc):
+        self.db.doc.replace_one({key: value}, doc)
         
 '''
 testuser = Database('test')
-info = ['test1','test2','test3']
-data = ['data1','data2','data3']
+info = ['Triangle','Rectangular','Circle']
+data = [ObjectId("5af9bf0ba129741ec424679c"),
+        ObjectId("5af9be7aa129741ec4243487"),
+        ObjectId("5af86010a129741ec4240739")]
 testlist = testuser.Makelist(info, data)
 
 
 
-testdoc = {'test': '10', 'test2': '20'}
-upload_doc('uptest', '', testdoc)
-modify_doc("name", "uptest", "list", testdoc)
-data = get_data("name", "uptest", "test")
+testdb = Database('test')
+testdb.Upload('test', ObjectId("5ad778ada129740c4c85f7d8"), testlist)
 '''
