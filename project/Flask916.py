@@ -9,6 +9,7 @@ from wtforms import StringField, SubmitField
 from wtforms.validators import Required
 from base64 import b64encode
 from werkzeug.utils import secure_filename
+from bson import ObjectId
 import os
 
 '''
@@ -86,8 +87,10 @@ def Carousel():
         dataDB = Database(keys[i])
         dataFS = FSBucket(keys[i])
         datadoc = dataDB.Getdoc('_id', docids[i])
-        imageid = datadoc['image']        
-        carouseldata.append(b64encode(dataFS.Findbyid(imageid)).decode('ascii'))
+        imageid = datadoc['image']
+        imagedata = dataFS.Findbyid(imageid)
+        if imagedata is not None:
+            carouseldata.append(b64encode(imagedata).decode('ascii'))
     del dataDB,dataFS
             
     return render_template('carousel.html', 
@@ -95,29 +98,76 @@ def Carousel():
                            carouseldata = carouseldata)
     
 @app.route('/Carousel/<username>', methods=['GET', 'POST'])
-def Carousel_final(username = None):
+def carousel_sec(username = None):
     if username is None:
         username = testuser
+    #session['usernamenow'] = username
     keys = []
     carouseldata = []
     dataDB = Database(username)
     dataFS = FSBucket(username)
     #userFS = FSBucket(username)
     datadoc = dataDB.Getdoc('name', username)
+    dataids = []
+    '''
+    for k in datadoc['list'].keys():
+        keys.append(None)
+    '''
     for k in datadoc['list'].keys():
         keys.append(k)
-    for ids in datadoc['list'].values():
-        carouseldata.append(b64encode(dataFS.Findbyid(ids)).decode('ascii'))
-    #del dataDB,dataFS
-            
-    return render_template('carousel.html', 
+    for d in datadoc['list'].values():
+        dataids.append(d)
+    for i in range(0,len(keys)):
+        dataDB = Database(username)
+        dataFS = FSBucket(username)
+        datadoc = dataDB.Getdoc('_id', dataids[i])
+        imageid = datadoc['image']
+        imagedata = dataFS.Findbyid(imageid)
+        if imagedata is not None:
+            carouseldata.append(b64encode(imagedata).decode('ascii'))
+    del dataDB,dataFS
+
+    return render_template('carousel.html',
+                           username = username,
+                           kinds = None,
                            keys = keys,
                            carouseldata = carouseldata)
+
+@app.route('/Carousel/<username>/<kinds>', methods=['GET', 'POST'])
+def carousel_third(username,kinds):
+    if username is None:
+        username = testuser
+    keys = None
+    carouseldata = []
+    dataDB = Database(username)
+    dataFS = FSBucket(username)
+    #userFS = FSBucket(username)
+    datadoc = dataDB.Getdoc('name', kinds)
+    '''
+    for k in datadoc['list'].keys():
+        keys.append(None)
+    '''
+    if datadoc is not None:
+        for ids in datadoc['list'].values():
+            doc = dataDB.Getdoc('_id', ids)
+            imagedata = dataFS.Findbyid(doc['image'])
+            if imagedata is not None:
+                carouseldata.append(b64encode(imagedata).decode('ascii'))
+        return render_template('carousel.html',
+                               username = username,
+                               kinds = kinds,
+                               keys = keys,
+                               carouseldata = carouseldata)
+    else:
+        print("datadoc not found")
+        return redirect(url_for('carousel_sec', username = username))
+    #del dataDB,dataFS
+
     
 
 
 @app.route('/Uploads', methods=['GET', 'POST'])
-#top -> user -> kinds -> item
+
 def upload_file():
     existflag = True
     form1 = UploadForm()
@@ -134,32 +184,35 @@ def upload_file():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            username = form1.username
+            username = form1.username.data
             dataDB = Database(username)
             dataFS = FSBucket(username)
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            print(filename)
             fileid = dataFS.Upload(os.path.join(app.config['UPLOAD_FOLDER'],filename), filename)
             #upload item
-            if form1.itemname is not None:
-                kindsdoc = dataDB.Getdoc("name", form1.kinds)
+            if form1.itemname.data is not None:
+                kindsdoc = dataDB.Getdoc("name", form1.kinds.data)
                 if kindsdoc is not None:
-                    docid = dataDB.Upload(form1.kinds + "_" + form1.itemname,
+                    docid = dataDB.Upload(form1.kinds.data + "_" + form1.itemname.data,
                                           fileid, None)
                     kindslist = kindsdoc['list']
-                    kindslist[form1.kinds] = docid
+                    if kindslist is None:
+                        kindslist = {}
+                    kindslist[form1.kinds.data + "_" + form1.itemname.data] = docid
                     kindsdoc['list'] = kindslist
                     dataDB.Modify("_id", kindsdoc['_id'], kindsdoc)
                     existflag = False
+                else:
+                    print("get kinds fail")
             #upload kinds
             else:
-                userdoc = dataDB.Getdoc("name", form1.username)
+                userdoc = dataDB.Getdoc("name", form1.username.data)
                 if userdoc is not None:
-                    docid = dataDB.Upload(form1.kinds,
+                    docid = dataDB.Upload(form1.kinds.data,
                                           fileid, None)
                     userlist = userdoc['list']
-                    userlist[form1.kinds] = docid
+                    userlist[form1.kinds.data] = docid
                     userdoc['list'] = userlist
                     dataDB.Modify("_id", userdoc['_id'], userdoc)
                     existflag = False

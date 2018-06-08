@@ -12,10 +12,25 @@
                     {% for filedata in carouseldata %}
                         <div class="item {% if loop.index == 1 %} active {% endif %}">
                             {% set i = loop.index - 1 %}
-                            <a href="/Carousel/{{keys[i]}}">
-                            <img  src="data:image/png;base64, {{ filedata }}"/>
-                            <h1> {{i}} </h1>
-                            </a>                            
+                            {% if username%}
+			                    {% if kinds %}
+			                        {% if keys %}
+			                        {# do not run #}
+			                        <a href="/Carousel/{{username}}/kinds/{{keys[i]}}">
+			                        {% endif %}
+                                    <img  src="data:image/png;base64, {{ filedata }}"/>
+                                    </a>
+			                    {% else %}
+			                        <a href="/Carousel/{{username}}/{{keys[i]}}">
+                                    <img  src="data:image/png;base64, {{ filedata }}"/>
+                                    </a>
+			                    {% endif %}
+			                {% else %}
+			                    <a href="/Carousel/{{keys[i]}}">
+                                <img  src="data:image/png;base64, {{ filedata }}"/>
+                                </a>
+			                {% endif %}
+                            
                         </div> 
                     {% endfor %}
                 </div>

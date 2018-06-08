@@ -37,7 +37,7 @@ class Database():
             listdata[data_id[1][i]] = data_id[2][i]
         else:
             return listdata
-        print('err')
+        print('Makelist fail')
         return None
     
     def Getdoc(self, key, value):
@@ -45,7 +45,7 @@ class Database():
             for doc in self.db.doc.find({key: value}):
                 return doc
         except:
-            print('err')
+            print('Getdoc fail')
             return None
     
     #拿資料 有target就回傳target的資料
@@ -56,7 +56,7 @@ class Database():
             for doc in self.db.doc.find({key: value}):
                 return doc[key_to_get_data]
         except:
-            print('err')
+            print('Getdata fail')
             return None
     
     def Getlistdata(self, key, value,list_target):    
@@ -65,12 +65,12 @@ class Database():
                     if list_target is not None:            
                         return (doc['list'])[list_target]
         except:
-            print('err')
+            print('Getlistdata')
             return None
     #找到指定欄位，並修改
     #(database，尋找的關鍵字，尋找的值，修改後dist)
     def Modify(self, key, value, doc):
-        self.db.dbtest.replace_one({key: value}, doc)
+        self.db.doc.replace_one({key: value}, doc)
         
 '''
 testuser = Database('test')

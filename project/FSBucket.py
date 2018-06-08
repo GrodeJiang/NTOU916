@@ -17,7 +17,7 @@ class FSBucket():
         self.uri = "mongodb://localhost:27017/"
         self.client = MongoClient(self.uri)
         self.db = self.client[username]
-        self.fs = GridFSBucket(self.db)
+        self.fs = GridFSBucket(self.db, 'image')
         
     def Upload(self, path, fname):        
         with open(path,'rb') as file:
