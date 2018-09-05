@@ -19,7 +19,7 @@ class Database():
                }
     '''
     #上傳 (database，名稱，圖片id，表格資料{dict})
-    def Upload(self, name, imageid, listdata):
+    def Upload(self, name, imageid, listdata = None):
         doc = {'name': name,
                'image': imageid,
                'list': listdata}
@@ -65,12 +65,16 @@ class Database():
                     if list_target is not None:            
                         return (doc['list'])[list_target]
         except:
-            print('Getlistdata')
+            print('Getlistdata fail')
             return None
     #找到指定欄位，並修改
     #(database，尋找的關鍵字，尋找的值，修改後dist)
     def Modify(self, key, value, doc):
-        self.db.doc.replace_one({key: value}, doc)
+        try:
+            self.db.doc.replace_one({key: value}, doc)
+        except:
+            print('Modify fail')
+            return False
         
 '''
 testuser = Database('test')

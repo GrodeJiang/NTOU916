@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 from Database import Database
 from FSBucket import FSBucket
+from Users import Users
+import Forms as FM
 from flask import Flask, render_template, session, redirect, url_for, flash, request, send_from_directory
 from flask.ext.bootstrap import Bootstrap
-from flask.ext.wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
-from wtforms import StringField, SubmitField
-from wtforms.validators import Required
 from base64 import b64encode
 from werkzeug.utils import secure_filename
 from bson import ObjectId
+from flask.ext.login import login_user, logout_user, login_required
 import os
 
 '''
@@ -25,20 +24,7 @@ listdata = CirDB.Makelist(info,data)
 DBid = CirDB.Upload('Circle', cirid, listdata)
 '''
 
-class NameForm(FlaskForm):
-    name = StringField('What is your name?', validators=[Required()])
-    submit = SubmitField('Submit')
-    
-class DataForm(FlaskForm):
-    filename = StringField('Enter the file name', validators=[Required()])
-    submit = SubmitField('Submit')
-    
-class UploadForm(FlaskForm):
-    username = StringField('Enter the user name', validators=[Required()])
-    kinds = StringField('Enter the kinds name', validators=[Required()])
-    itemname = StringField('Enter the item name')
-    file = FileField('Choose image', validators=[FileRequired()])
-    submit = SubmitField('Submit')
+
 
 UPLOAD_FOLDER = 'D:\python\picture'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
@@ -46,6 +32,7 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 icon = None
 testuser = 'test'
 usernamenow = 'test'
+user = Users()
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -58,7 +45,7 @@ def allowed_file(filename):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    form1 = NameForm()
+    form1 = FM.NameForm()
     if form1.validate_on_submit():
         old_name = session.get('name')        
         session['name'] = form1.name.data
@@ -170,7 +157,7 @@ def carousel_third(username,kinds):
 
 def upload_file():
     existflag = True
-    form1 = UploadForm()
+    form1 = FM.UploadForm()
     username = testuser
     if form1.validate_on_submit():
         # check if the post request has the file part
@@ -194,12 +181,15 @@ def upload_file():
             if form1.itemname.data is not None:
                 kindsdoc = dataDB.Getdoc("name", form1.kinds.data)
                 if kindsdoc is not None:
-                    docid = dataDB.Upload(form1.kinds.data + "_" + form1.itemname.data,
-                                          fileid, None)
+                    fname = form1.kinds.data + "_" + form1.itemname.data
+                    if fname.find(".") is not -1:
+                        flash('filename do not use "."')
+                        return redirect(request.url)
+                    docid = dataDB.Upload(fname,fileid, None)
                     kindslist = kindsdoc['list']
                     if kindslist is None:
                         kindslist = {}
-                    kindslist[form1.kinds.data + "_" + form1.itemname.data] = docid
+                    kindslist[fname] = docid
                     kindsdoc['list'] = kindslist
                     dataDB.Modify("_id", kindsdoc['_id'], kindsdoc)
                     existflag = False
@@ -207,7 +197,10 @@ def upload_file():
                     print("get kinds fail")
             #upload kinds
             else:
-                userdoc = dataDB.Getdoc("name", form1.username.data)
+                userdoc = dataDB.Getdoc("name", form1.username.data)                
+                if form1.kinds.data.find(".") is not -1:
+                    flash('kindname do not use "."')
+                    return redirect(request.url)
                 if userdoc is not None:
                     docid = dataDB.Upload(form1.kinds.data,
                                           fileid, None)
@@ -224,12 +217,50 @@ def upload_file():
     return render_template('uptest.html',
                            form = form1)
 
-@app.route('/uploads/<filename>')
+@app.route('/Uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
-
+@app.route('/Login', methods=['GET', 'POST'])
+def login():
+    form = FM.LoginForm()
+    if form.validate_on_submit():
+        logincheck = user.login(form.username.data,form.password.data)
+        if logincheck is True:
+            login_user(form.username.data, False)
+            return redirect(request.args.get('next') or url_for('main.index'))
+        flash('Invalid username or password.')
+    return render_template('login.html', form = form)
     
+@app.route('/Logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('main.index'))
+
+@app.route('/Register', methods=['GET', 'POST'])
+def register():
+    form = FM.RegistForm()
+    if form.validate_on_submit():
+        flag = user.register(form.username.data,form.password.data)
+        if flag:
+            flash('You can now login.')
+            return redirect(url_for('Login'))
+    return render_template('register.html', form=form)
+'''
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    form = RegistForm()
+    if form.validate_on_submit():
+        user = User(email=form.email.data,
+                    username=form.username.data,
+                    password=form.password.data)
+        db.session.add(user)
+        flash('You can now login.')
+        return redirect(url_for('auth.login'))
+    return render_template('auth/register.html', form=form)  
+'''
 if __name__ == "__main__":
     app.run()
