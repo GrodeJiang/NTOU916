@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from flask.ext.wtf import FlaskForm
+from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
 from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import Required, EqualTo
+from wtforms.validators import Required, EqualTo, length, Regexp
 
 class NameForm(FlaskForm):
     name = StringField('What is your name?', [Required()])
@@ -25,7 +25,10 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Log In')
     
 class RegistForm(FlaskForm):
-    username = StringField('Enter the username', [Required()])
+    username = StringField('Enter the username', validators=[
+                Required(), length(1, 64), Regexp('^[A-Za-z][A-Za-z0-9_.]*$', 0,
+                'Usernames must have only letters, '
+                'numbers, dots or underscores')])
     password = PasswordField('Enter the password', [Required()])
     comfirmpw = PasswordField('Repeat Password', [Required(), EqualTo('password', message='please check your password')])
     submit = SubmitField('Regist')

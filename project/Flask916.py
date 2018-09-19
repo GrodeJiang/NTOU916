@@ -4,11 +4,11 @@ from FSBucket import FSBucket
 from Users import Users
 import Forms as FM
 from flask import Flask, render_template, session, redirect, url_for, flash, request, send_from_directory
-from flask.ext.bootstrap import Bootstrap
+from flask_bootstrap import Bootstrap
 from base64 import b64encode
 from werkzeug.utils import secure_filename
 from bson import ObjectId
-from flask.ext.login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, LoginManager
 import os
 
 '''
@@ -32,16 +32,29 @@ ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 icon = None
 testuser = 'test'
 usernamenow = 'test'
-user = Users()
+
+login_manager = LoginManager()
+login_manager.session_protection = 'strong'
+login_manager.login_view = 'auth.login'
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 bootstrap = Bootstrap(app)
+login_manager.init_app(app)
 
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@login_manager.user_loader  
+def user_loader(username):
+    user = Users()
+    if user.check(username):
+        return user
+    return
+    
+    
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -223,13 +236,15 @@ def uploaded_file(filename):
                                filename)
 
 @app.route('/Login', methods=['GET', 'POST'])
-def login():
+def login():    
+    user = Users()
     form = FM.LoginForm()
     if form.validate_on_submit():
         logincheck = user.login(form.username.data,form.password.data)
         if logincheck is True:
-            login_user(form.username.data, False)
-            return redirect(request.args.get('next') or url_for('main.index'))
+            login_user(user)
+            session['name'] = form.username.data
+            return redirect(request.args.get('next') or url_for('index'))
         flash('Invalid username or password.')
     return render_template('login.html', form = form)
     
@@ -237,17 +252,19 @@ def login():
 @login_required
 def logout():
     logout_user()
+    session['name'] = None
     flash('You have been logged out.')
-    return redirect(url_for('main.index'))
+    return redirect(url_for('index'))
 
 @app.route('/Register', methods=['GET', 'POST'])
 def register():
+    user = Users()
     form = FM.RegistForm()
     if form.validate_on_submit():
         flag = user.register(form.username.data,form.password.data)
         if flag:
             flash('You can now login.')
-            return redirect(url_for('Login'))
+            return redirect(url_for('login'))
     return render_template('register.html', form=form)
 '''
 @app.route('/register', methods=['GET', 'POST'])

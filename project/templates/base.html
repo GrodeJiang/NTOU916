@@ -29,20 +29,16 @@
     <div class="navbar-collapse collapse">
      <ul class="nav navbar-nav">
       <li><a href="/">Home</a></li>
-      <li><a href="/image">Image</a></li>
-      <li><a href="/data">Data</a></li>
       <li><a href="/carousel">Carousel</a></li>
      </ul>
+     <ul class="nav navbar-nav navbar-right">
+      {% if current_user.is_authenticated %}
+       <li><a href="{{ url_for('logout') }}">Sign Out</a></li>
+      {% else %}
+       <li><a href="{{ url_for('login') }}">Sign In</a></li>
+      {% endif %}
+     </ul>
     </div>
-    {# undebug
-    <ul class="nav navbar-nav navbar-right">
-     {% if current_user.is_authenticated() %}
-      <li><a href="{{ url_for('auth.logout') }}">Sign Out</a></li>
-     {% else %}
-      <li><a href="{{ url_for('auth.login') }}">Sign In</a></li>
-     {% endif %}
-    </ul>
-    #}
    </div>
   </div>
   {%- endblock navbar %}
