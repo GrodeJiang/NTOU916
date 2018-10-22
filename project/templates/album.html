@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Test Image{% endblock %}
+
+{% block page_content %}    
+  <div class="page-header">
+    <div class="album py-5 bg-light">
+      <div class="container">
+      
+          <div class="row">
+              <ul class="col-md-4">
+                <li class="span4">
+                  <div class="thumbnail">
+                    <img data-src="holder.js/300x200" alt="300x200" src="data:image/png;base64,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" style="width: 300px; height: 200px;">
+                    <div class="caption">
+                      <h3>Thumbnail label</h3>
+                      <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                      <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+                    </div>
+                  </div>
+                </li>
+                <li class="span4">
+                  <div class="thumbnail">
+                    <img data-src="holder.js/300x200" alt="300x200" src="data:image/png;base64,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" style="width: 300px; height: 200px;">
+                    <div class="caption">
+                      <h3>Thumbnail label</h3>
+                      <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                      <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+                    </div>
+                  </div>
+                </li>
+                <li class="span4">
+                  <div class="thumbnail">
+                    <img data-src="holder.js/300x200" alt="300x200" src="data:image/png;base64,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" style="width: 300px; height: 200px;">
+                    <div class="caption">
+                      <h3>Thumbnail label</h3>
+                      <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                      <p><a href="#" class="btn btn-primary">Action</a> <a href="#" class="btn">Action</a></p>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+        <div class="row">
+          <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22288%22%20height%3D%22225%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20288%20225%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1664ee5106a%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1664ee5106a%22%3E%3Crect%20width%3D%22288%22%20height%3D%22225%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2296.8359375%22%20y%3D%22118.8%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+              <div class="card-body">
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  </div>
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22288%22%20height%3D%22225%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20288%20225%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1664ee5106a%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1664ee5106a%22%3E%3Crect%20width%3D%22288%22%20height%3D%22225%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2296.8359375%22%20y%3D%22118.8%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+              <div class="card-body">
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  </div>
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22288%22%20height%3D%22225%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20288%20225%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1664ee5106a%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1664ee5106a%22%3E%3Crect%20width%3D%22288%22%20height%3D%22225%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2296.8359375%22%20y%3D%22118.8%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+              <div class="card-body">
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  </div>
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22288%22%20height%3D%22225%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20288%20225%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1664ee5106a%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1664ee5106a%22%3E%3Crect%20width%3D%22288%22%20height%3D%22225%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2296.8359375%22%20y%3D%22118.8%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+              <div class="card-body">
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  </div>
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22288%22%20height%3D%22225%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20288%20225%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1664ee5106a%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1664ee5106a%22%3E%3Crect%20width%3D%22288%22%20height%3D%22225%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2296.8359375%22%20y%3D%22118.8%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+              <div class="card-body">
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  </div>
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22288%22%20height%3D%22225%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20288%20225%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1664ee5106a%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1664ee5106a%22%3E%3Crect%20width%3D%22288%22%20height%3D%22225%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2296.8359375%22%20y%3D%22118.8%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+              <div class="card-body">
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  </div>
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22288%22%20height%3D%22225%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20288%20225%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1664ee5106a%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1664ee5106a%22%3E%3Crect%20width%3D%22288%22%20height%3D%22225%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2296.8359375%22%20y%3D%22118.8%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+              <div class="card-body">
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  </div>
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22288%22%20height%3D%22225%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20288%20225%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1664ee5106a%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1664ee5106a%22%3E%3Crect%20width%3D%22288%22%20height%3D%22225%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2296.8359375%22%20y%3D%22118.8%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+              <div class="card-body">
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  </div>
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+              <img class="card-img-top" data-src="holder.js/100px225?theme=thumb&amp;bg=55595c&amp;fg=eceeef&amp;text=Thumbnail" alt="Thumbnail [100%x225]" style="height: 225px; width: 100%; display: block;" src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22288%22%20height%3D%22225%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20288%20225%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_1664ee5106a%20text%20%7B%20fill%3A%23eceeef%3Bfont-weight%3Abold%3Bfont-family%3AArial%2C%20Helvetica%2C%20Open%20Sans%2C%20sans-serif%2C%20monospace%3Bfont-size%3A14pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_1664ee5106a%22%3E%3Crect%20width%3D%22288%22%20height%3D%22225%22%20fill%3D%22%2355595c%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%2296.8359375%22%20y%3D%22118.8%22%3EThumbnail%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E" data-holder-rendered="true">
+              <div class="card-body">
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <div class="d-flex justify-content-between align-items-center">
+                  <div class="btn-group">
+                    <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                    <button type="button" class="btn btn-sm btn-outline-secondary">Edit</button>
+                  </div>
+                  <small class="text-muted">9 mins</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
