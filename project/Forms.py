@@ -12,12 +12,41 @@ class DataForm(FlaskForm):
     filename = StringField('Enter the file name', [Required()])
     submit = SubmitField('Submit')
     
-class UploadForm(FlaskForm):
-    username = StringField('Enter the user name', validators=[Required()])
-    kinds = StringField('Enter the kinds name', [Required()])
-    itemname = StringField('Enter the item name')
+class UploadFirst(FlaskForm):
+    username = StringField('Enter the name of the first stage', validators=[Required(), 
+		        Regexp('^[A-Za-z][A-Za-z0-9_]*$', 0,
+                'usernames must have only letters, '
+                'numbers, dots or underscores')])
     file = FileField('Choose image', [FileRequired()])
-    submit = SubmitField('Submit')
+    submit1 = SubmitField('Submit')
+
+class UploadSecond(FlaskForm):
+    username = StringField('Enter the name of the first stage', validators=[Required(), 
+		        Regexp('^[A-Za-z][A-Za-z0-9_]*$', 0,
+                'usernames must have only letters, '
+                'numbers, dots or underscores')])
+    kinds = StringField('Enter the name of the second stage', validators=[Required(),
+                Regexp('^[A-Za-z][A-Za-z0-9_]*$', 0,
+                'kinds must have only letters, '
+                'numbers, dots or underscores')])
+    file = FileField('Choose image', [FileRequired()])
+    submit2 = SubmitField('Submit')
+
+class UploadThird(FlaskForm):
+    username = StringField('Enter the name of the first stage', validators=[Required(), 
+		        Regexp('^[A-Za-z][A-Za-z0-9_]*$', 0,
+                'usernames must have only letters, '
+                'numbers, dots or underscores')])
+    kinds = StringField('Enter the name of the second stage', validators=[Required(),
+                Regexp('^[A-Za-z][A-Za-z0-9_]*$', 0,
+                'kinds must have only letters, '
+                'numbers, dots or underscores')])
+    itemname = StringField('Enter the name of the third stage', validators=[Required(),
+                Regexp('^[A-Za-z][A-Za-z0-9_]*$', 0,
+                'itemname must have only letters, '
+                'numbers, dots or underscores')])
+    file = FileField('Choose image', [FileRequired()])
+    submit3 = SubmitField('Submit')
     
 class LoginForm(FlaskForm):
     username = StringField('Enter the username', [Required()])
@@ -32,3 +61,6 @@ class RegistForm(FlaskForm):
     password = PasswordField('Enter the password', [Required()])
     comfirmpw = PasswordField('Repeat Password', [Required(), EqualTo('password', message='please check your password')])
     submit = SubmitField('Regist')
+class AlbumForm(FlaskForm):
+    imageid = ""
+    addcar = SubmitField('add car')
