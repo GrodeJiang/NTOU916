@@ -72,6 +72,7 @@ class Database():
     def Modify(self, key, value, doc):
         try:
             self.db.doc.replace_one({key: value}, doc)
+            return True
         except:
             print('Modify fail')
             return False

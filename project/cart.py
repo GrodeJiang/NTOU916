@@ -12,40 +12,40 @@ uri = "mongodb://localhost:27017/"
 client = MongoClient(uri)
 db = client['Users']
 
-def addcar(username, itemid):
+def addcart(username, itemid):
     if username is None:
         print("username is None")
         return False
     doc = db.doc.find_one({'username': username})
     if doc is not None:
         try:
-            carlist =  doc['car']
+            cartlist =  doc['cart']
         except KeyError:
-            carlist = []
-        carlist.append(itemid)
-        doc['car'] = carlist
+            cartlist = []
+        cartlist.append(itemid)
+        doc['cart'] = cartlist
         db.doc.find_one_and_replace({'username': username}, doc)
         return True
     print("username not found")
     return False
     
-def delcar(username, itemid):
+def delcart(username, itemid):
     if username is None:
         print("username is None")
         return False
     doc = db.doc.find_one({'username': username})
     if doc is not None:
         try:
-            carlist =  doc['car']
+            cartlist =  doc['cart']
         except KeyError:
             return False
         try:
-            i = carlist.index(itemid)
+            i = cartlist.index(itemid)
         except ValueError:
             print('not found')
             return False
-        carlist.pop(i)
-        doc['car'] = carlist
+        cartlist.pop(i)
+        doc['cart'] = cartlist
         db.doc.find_one_and_replace({'username': username}, doc)
         return True
     print("username not found")

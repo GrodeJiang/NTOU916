@@ -14,29 +14,29 @@
   <div class="page-header">
     <div class="album py-5 bg-light">
       <div class="carousel-inner">
-		  {% for fileid in carouselid %}
-        {% set i = loop.index - 1 %}
-			  {% if username %}
-			    {% if kinds %}
-			      <div class="col-md-4">
-				      <div class="card mb-4 shadow-sm">
-					      <img  src= "{{ url_for("imageid", ids = carouselid[i] , username = username) }}" style="height: 200px; width: 300px; display: block;" />
-					      <div class="card-body">   
-                  <form class="form form-horizontal" method="post" role="form">
-                    {{ Aform.hidden_tag() }}
-                    {{ wtf.form_errors(Aform, hiddens="only") }}
-                    {{ wtf.form_field(Aform.addcar, class="btn btn-sm btn-outline-secondary") }}
-                  </form>
-						      <div class="btn-group">
-						        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="testclick()">View</button>
-						        <button type="button" class="btn btn-sm btn-outline-secondary">Buy</button>
-						      </div>
-					      </div>
-				      </div>
-				    </div>
-					{% endif %}
-			 {% endif %}
-		{% endfor %}
+      {% if carouselid %}
+        {% for fileid in carouselid %}
+          {% set i = loop.index - 1 %}
+          {% if username %}
+            {% if kinds %}
+              <div class="col-md-4">
+                <div class="card" style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+                  <img  src= "{{ url_for("imageid", ids = carouselid[i] , username = username) }}" style="height: 200px; width: 300px; display: block;  margin: 0 auto" />
+                  <div class="card-body">   
+                    <div class="btn-group" style="margin-top:7px; margin-left: 21px; margin-bottom:10px">
+                      <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                      <button type="button" class="btn btn-sm btn-outline-secondary">Add cart</button>
+                    </div>
+                  </div>
+                </div>                
+                <p><br></p>
+              </div>
+            {% endif %}
+         {% endif %}
+      {% endfor %}
+    {% else %}
+      <p>Nothing here</p?
+    {% endif %}
       </div>
     </div>
   </div>

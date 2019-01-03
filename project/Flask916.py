@@ -100,7 +100,6 @@ def imageid(username, ids):
     dataDB = Database(username)
     dataFS = FSBucket(username)
     doc = dataDB.Getdoc("_id", ObjectId(ids))
-    print(doc)
     imagedata = dataFS.Findbyid(doc['image'])
     if imagedata is not None:
         return send_file(
@@ -114,23 +113,28 @@ def imageid(username, ids):
 def carousel():
     username = testuser
     keys = []
-    docids = []
+    dataids = []
     carouselid = []
     userDB = Database(username)
     #userFS = FSBucket(username)
     userdoc = userDB.Getdoc('name', username)
-    for k in userdoc['list'].keys():
-        keys.append(k)
-    for d in userdoc['list'].values():
-        docids.append(d)
-    for i in range(0,len(keys)):
+    try:        
+        for k in userdoc['list'].keys():
+            keys.append(k)
+        for d in userdoc['list'].values():
+            dataids.append(d)
+        for i in range(0,len(keys)):
+            carouselid.append(dataids[i])
+    except:
+        print('err')
+        '''
         dataDB = Database(keys[i])
         dataFS = FSBucket(keys[i])
         datadoc = dataDB.Getdoc('_id', docids[i])
         imageid = datadoc['image']
         if imageid is not None:
             carouselid.append(imageid)
-    del dataDB,dataFS
+        '''
             
     return render_template('carouselid.html',
                            keys = keys,
@@ -144,22 +148,25 @@ def carousel_sec(username = None):
     keys = []
     carouselid = []
     dataDB = Database(username)
-    dataFS = FSBucket(username)
-    #userFS = FSBucket(username)
     datadoc = dataDB.Getdoc('name', username)
     dataids = []
-    for k in datadoc['list'].keys():
-        keys.append(k)
-    for d in datadoc['list'].values():
-        dataids.append(d)
-    for i in range(0,len(keys)):
+    if datadoc != None:
+        for k in datadoc['list'].keys():
+            keys.append(k)
+        for d in datadoc['list'].values():
+            dataids.append(d)
+        for i in range(0,len(keys)):
+            carouselid.append(dataids[i])
+    else:
+        print('doc is not found')
+        '''
         dataDB = Database(username)
         dataFS = FSBucket(username)
         datadoc = dataDB.Getdoc('_id', dataids[i])
         imageid = datadoc['image']
         if imageid is not None:
             carouselid.append(imageid)
-    del dataDB,dataFS
+        '''
 
     return render_template('carouselid.html',
                            username = username,
