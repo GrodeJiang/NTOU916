@@ -40,7 +40,7 @@ login_manager.session_protection = 'strong'
 login_manager.login_view = 'auth.login'
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'hard to guess string'
+app.config['SECRET_KEY'] = 'smcl916NTOU'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 bootstrap = Bootstrap(app)
 login_manager.init_app(app)

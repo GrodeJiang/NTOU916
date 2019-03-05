@@ -19,10 +19,12 @@ class Database():
                }
     '''
     #上傳 (database，名稱，圖片id，表格資料{dict})
-    def Upload(self, name, imageid, listdata = None):
+    def Upload(self, name, imageid, listdata = None, price = None):
         doc = {'name': name,
                'image': imageid,
                'list': listdata}
+        if price:
+            doc['price'] = price
         result = self.db.doc.insert_one(doc)
         print ('upload done')
         return result.inserted_id

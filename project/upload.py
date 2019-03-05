@@ -57,7 +57,8 @@ def upload_Third(form, file):
         print('kinds not found')
         return False
     fname = form.kinds.data + "_" + form.itemname.data
-    docid = dataDB.Upload(fname,fileid, None)
+    price = form.price.data
+    docid = dataDB.Upload(fname,fileid, None, price=price)
     kindsdoc['list'][fname] = docid
     dataDB.Modify("_id", kindsdoc['_id'], kindsdoc)
     return True

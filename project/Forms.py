@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileRequired
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, IntegerField
 from wtforms.validators import Required, EqualTo, length, Regexp
 
 class NameForm(FlaskForm):
@@ -45,6 +45,7 @@ class UploadThird(FlaskForm):
                 Regexp('^[A-Za-z][A-Za-z0-9_]*$', 0,
                 'itemname must have only letters, '
                 'numbers, dots or underscores')])
+    price = IntegerField('Item price', validators=[Required()])
     file = FileField('Choose image', [FileRequired()])
     submit3 = SubmitField('Submit')
     
